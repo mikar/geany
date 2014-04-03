@@ -1138,6 +1138,22 @@ static gboolean check_vte(GdkModifierType state, guint keyval)
 			return FALSE;
 	}
 
+	/* make view commands override any bash commands */
+	group = keybindings_get_core_group(GEANY_KEY_GROUP_VIEW);
+	foreach_ptr_array(kb, i, group->key_items)
+	{
+		if (state == kb->mods && keyval == kb->key)
+			return FALSE;
+	}
+
+	/* make build commands override any bash commands */
+	group = keybindings_get_core_group(GEANY_KEY_GROUP_BUILD);
+	foreach_ptr_array(kb, i, group->key_items)
+	{
+		if (state == kb->mods && keyval == kb->key)
+			return FALSE;
+	}
+
 	/* Temporarily disable the menus to prevent conflicting menu accelerators
 	 * from overriding the VTE bash shortcuts.
 	 * Note: maybe there's a better way of doing this ;-) */
